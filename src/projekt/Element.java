@@ -9,13 +9,12 @@ public class Element {
     private final String tag;
     private String content;
     private final Map<String, String> attributes = new HashMap<>();
-    private final List<Element> children;
+    private final List<Element> children = new ArrayList<>();
     private final int nodeDepth;
 
     public Element(String tag, int nodeDepth){
         this.tag = tag;
         this.nodeDepth = nodeDepth;
-        children = new ArrayList<>();
     }
 
     public String getTag(){
@@ -48,6 +47,10 @@ public class Element {
 
     public void setContent(String content){
         this.content = content;
+    }
+
+    public int getNodeDepth(){
+        return nodeDepth;
     }
 
     @Override

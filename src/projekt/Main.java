@@ -6,8 +6,8 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        List<FileHandler> filesList = new ArrayList<>();    //C:/Users/pawel/Desktop/psk/TO/Projekt/dummy.xml
-        UserInput userInput = new UserInput(filesList);     //C:\Users\pawel\Desktop\psk\TO\Projekt\dummy.xml
+        List<FileHandler> filesList = new ArrayList<>();
+        UserInput userInput = new UserInput(filesList);
 
         userInput.getInput();
     }

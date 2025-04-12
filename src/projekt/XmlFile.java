@@ -11,8 +11,8 @@ public class XmlFile {
     private final String fileContent;
     private Element rootElement;
 
-    public XmlFile(List<FileHandler> filesList, int fileIndex){
-        fileContent = filesList.get(fileIndex).getFileContent();
+    public XmlFile(FileHandler fileHandler){
+        fileContent = fileHandler.getFileContent();
     }
 
     public void insertAttributes(Map<String, String> attributes, String attributeString){
@@ -94,7 +94,7 @@ public class XmlFile {
                 && (fileContent.charAt(iterator) == '/');
     }
 
-    public void createXml(){
+    public int createXml(){
         List<Element> stack = new ArrayList<>();
         int i = 0;
         int fileLength = fileContent.length();
@@ -119,5 +119,10 @@ public class XmlFile {
             i++;
         }
         System.out.println(rootElement.toString());
+        return 0;
+    }
+
+    public Element getRootElement(){
+        return rootElement;
     }
 }
