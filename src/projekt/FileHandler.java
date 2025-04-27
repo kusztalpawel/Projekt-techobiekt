@@ -12,15 +12,15 @@ public class FileHandler {
     private File file;
     private String fileContent;
 
-    public int openFile() throws FileNotFoundException {
+    public boolean openFile() throws FileNotFoundException {
         String filePath;
         System.out.println("Podaj ścieżkę do pliku: ");
         Scanner keyboardInput = new Scanner(System.in);
         filePath = keyboardInput.nextLine();
 
         if (filePath == null || filePath.isEmpty()) {
-            System.out.println("Path is null or empty.");
-            return -1;
+            System.out.println("Ścieżka jest pusta");
+            return false;
         }
 
         try {
@@ -29,14 +29,14 @@ public class FileHandler {
             if (Files.exists(path)) {
                 file = new File(filePath);
                 setFileContent();
-                return 0;
+                return true;
             } else {
                 System.out.println("Podany plik nie istnieje!");
-                return -1;
+                return false;
             }
         } catch (InvalidPathException e){
             System.out.println("Niepoprawna sciezka");
-            return -1;
+            return false;
         }
     }
 

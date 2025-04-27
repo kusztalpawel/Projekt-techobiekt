@@ -8,13 +8,15 @@ import java.util.Map;
 public class Element {
     private final String tag;
     private String content;
-    private final Map<String, String> attributes = new HashMap<>();
-    private final List<Element> children = new ArrayList<>();
+    private final Map<String, String> attributes;
+    private final List<Element> children;
     private final int nodeDepth;
 
     public Element(String tag, int nodeDepth){
         this.tag = tag;
         this.nodeDepth = nodeDepth;
+        attributes = new HashMap<>();
+        children = new ArrayList<>();
     }
 
     public String getTag(){
@@ -43,6 +45,10 @@ public class Element {
 
     public void addChild(Element child){
         children.add(child);
+    }
+
+    public void setChildren(List<Element> children){
+        this.children.addAll(children);
     }
 
     public void setContent(String content){

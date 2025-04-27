@@ -2,7 +2,6 @@ package projekt;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -31,7 +30,7 @@ class XmlFileTest {
     }
 
     @Test
-    void testInsertAttributesParsesSingleAttribute() {
+    void testSingleAttribute() {
         Map<String, String> attributes = new HashMap<>();
         String input = "rodzaj=\"miasto\"";
 
@@ -42,7 +41,7 @@ class XmlFileTest {
     }
 
     @Test
-    void testInsertAttributesParsesMultipleAttributes() {
+    void testMultipleAttributes() {
         Map<String, String> attributes = new HashMap<>();
         String input = "rodzaj=\" miasto\" wielkosc =\"duze\" poczta=\"25-315\"";
 
@@ -55,7 +54,7 @@ class XmlFileTest {
     }
 
     @Test
-    void testInsertAttributesHandlesExtraWhitespace() {
+    void testExtraWhitespace() {
         Map<String, String> attributes = new HashMap<>();
         String input = "   rodzaj =  \"miasto\"   wielkosc   =\"duze\"   ";
 
@@ -67,7 +66,7 @@ class XmlFileTest {
     }
 
     @Test
-    void testInsertAttributesWithEmptyString() {
+    void testEmptyString() {
         Map<String, String> attributes = new HashMap<>();
         String input = "";
 
@@ -77,7 +76,7 @@ class XmlFileTest {
     }
 
     @Test
-    void testInsertElementAsRoot() {
+    void testInsertRootElement() {
         List<Element> stack = new ArrayList<>();
 
         xmlFile.insertElement(stack, true, 0);
@@ -90,7 +89,7 @@ class XmlFileTest {
     }
 
     @Test
-    void testInsertElementAsChildSelfClosing() {
+    void testInsertSelfClosingChild() {
         List<Element> stack = new ArrayList<>();
         Element parent = new Element("root", 0);
         stack.add(parent);

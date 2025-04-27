@@ -22,7 +22,7 @@ class FileHandlerTest {
     }
 
     @Test
-    void testSetFileContentReadsNonEmptyLines() throws Exception {
+    void testSetFileContent() throws Exception {
         String content = """
                 <?xml version="1.0" encoding="UTF-8"?>
                 	<Adres>
@@ -42,7 +42,7 @@ class FileHandlerTest {
     }
 
     @Test
-    void testSetFileContentWithNullFile() throws Exception {
+    void testSetNullFile() throws Exception {
         handler.setFileContent();
 
         assertNull(handler.getFileContent());

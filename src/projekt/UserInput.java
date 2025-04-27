@@ -9,34 +9,30 @@ import java.util.Scanner;
 public class UserInput {
     private final List<FileHandler> filesList;
     private int choice;
-    private int fileIndex;
 
     public UserInput(List<FileHandler> filesList){
         choice = 0;
-        fileIndex = 0;
         this.filesList = filesList;
     }
 
-    private void addFile() throws FileNotFoundException {
+    void addFile() throws FileNotFoundException {
         filesList.add(new FileHandler());
-        if(filesList.get(fileIndex).openFile() == 0) {
-            fileIndex++;
-        } else {
+        if(!(filesList.getLast().openFile())) {
             filesList.removeLast();
         }
     }
 
     private void showFilesList(){
-        for (int i = 0; i < fileIndex; i++) {
+        for (int i = 0; i < filesList.size(); i++) {
             System.out.println((i + 1) + ". " + filesList.get(i).getFile());
         }
     }
 
     private void showFile(Scanner keyboardInput){
         int fileIndexInput;
-        if(fileIndex != 0){
+        if(!filesList.isEmpty()){
             System.out.println("Podaj plik, który chcesz zobaczyć: ");
-            for (int i = 0; i < fileIndex; i++) {
+            for (int i = 0; i < filesList.size(); i++) {
                 System.out.println((i + 1) + ". " + filesList.get(i).getFile());
             }
             if(keyboardInput.hasNextInt()){
@@ -53,9 +49,9 @@ public class UserInput {
 
     private void generateSchema(Scanner keyboardInput){
         int fileIndexInput;
-        if(fileIndex != 0){
+        if(!filesList.isEmpty()){
             System.out.println("Podaj plik, który chcesz generować: ");
-            for (int i = 0; i < fileIndex; i++) {
+            for (int i = 0; i < filesList.size(); i++) {
                 System.out.println((i + 1) + ". " + filesList.get(i).getFile());
             }
             if(keyboardInput.hasNextInt()){
@@ -72,9 +68,7 @@ public class UserInput {
             String fileName  = filesList.get(fileIndexInput).getFile().getName().substring(0, filesList.get(fileIndexInput).getFile().getName().indexOf("."));
 
             try(FileWriter fileWriter = new FileWriter(fileName + "_schema.xsd")) {
-                fileWriter.write("<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">\n");
                 new XsdGenerator().createXSD(xmlFile.getRootElement(), fileWriter);
-                fileWriter.write("</xs:schema>\n");
             } catch (IOException e) {
                 System.out.println("An error occurred");
             }

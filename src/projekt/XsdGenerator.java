@@ -1,49 +1,68 @@
 package projekt;
 
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.Map;
 
 public class XsdGenerator {
-    public void createXSD(Element element, FileWriter fileWriter) throws IOException {
-        String indentUnit = " ";
-        StringBuilder currentIndent = new StringBuilder();
-        currentIndent.append(indentUnit.repeat(Math.max(0, element.getNodeDepth() + 1)));
+    String indentUnit = "  ";
+
+    public void createXSD(Element element, Writer writer) throws IOException {
+        writer.write("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
+        writer.write("<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">\n");
+        xsdElementGenerator(element, writer, new StringBuilder());
+        writer.write("</xs:schema>\n");
+    }
+
+    private void xsdElementGenerator(Element element, Writer writer, StringBuilder indent) throws IOException {
+        String typeString = "\" type=\"";
+        String endingTagString = "\"/>\n";
+
+        indent.append(indentUnit);
 
         if ((element.getAttributes().isEmpty()) && (element.getChildren().isEmpty())) {
-            fileWriter.write(currentIndent + "<xs:element name=\"" + element.getTag() + "\" type=\"xs:string\"/>\n");
+            writer.write(indent + "<xs:element name=\"" + element.getTag() + typeString + XmlTypes.detectType(element.getContent()) + endingTagString);
+            indent.delete(indent.length() - 2, indent.length());
             return;
         }
 
-        fileWriter.write(currentIndent + "<xs:element name=\"" + element.getTag() + "\">\n");
-        fileWriter.write(currentIndent + indentUnit + "<xs:complexType>\n");
+        writer.write(indent + "<xs:element name=\"" + element.getTag() + "\">\n");
+        indent.append(indentUnit);
+        writer.write(indent + "<xs:complexType>\n");
 
         if (!element.getChildren().isEmpty()) {
-            fileWriter.write(currentIndent + indentUnit + indentUnit + "<xs:sequence>\n");
+            indent.append(indentUnit);
+            writer.write(indent + "<xs:sequence>\n");
             for (Element child : element.getChildren()) {
-                createXSD(child, fileWriter);
+                xsdElementGenerator(child, writer, indent);
             }
-            fileWriter.write(currentIndent + indentUnit + indentUnit + "</xs:sequence>\n");
+            writer.write(indent + "</xs:sequence>\n");
         } else {
-            fileWriter.write(currentIndent + indentUnit + indentUnit + "<xs:simpleContent>\n");
-            fileWriter.write(currentIndent + indentUnit + indentUnit + indentUnit + "<xs:extension base=\"xs:string\">\n");
+            indent.append(indentUnit);
+            writer.write(indent + "<xs:simpleContent>\n");
+            indent.append(indentUnit);
+            writer.write(indent + "<xs:extension base=\"" + XmlTypes.detectType(element.getContent()) + "\">\n");
             if (!element.getAttributes().isEmpty()){
+                indent.append(indentUnit);
                 for (Map.Entry<String, String> attribute : element.getAttributes().entrySet()){
-                    fileWriter.write(currentIndent + indentUnit + indentUnit + indentUnit + indentUnit + "<xs:attribute name=\"" + attribute.getKey() + "\" type=\"xs:string\"/>\n");
+                    writer.write(indent + "<xs:attribute name=\"" + attribute.getKey() + typeString + XmlTypes.detectType(attribute.getValue()) + "\"" + " use=\"required" + endingTagString);
                 }
             }
-            fileWriter.write(currentIndent + indentUnit + indentUnit + indentUnit + "</xs:extension>\n");
-            fileWriter.write(currentIndent + indentUnit + indentUnit + "</xs:simpleContent>\n");
+            indent.delete(indent.length() - 2, indent.length());
+            writer.write(indent + "</xs:extension>\n");
+            indent.delete(indent.length() - 2, indent.length());
+            writer.write(indent + "</xs:simpleContent>\n");
         }
 
         if (!element.getChildren().isEmpty() && !element.getAttributes().isEmpty()) {
             for (Map.Entry<String, String> attribute : element.getAttributes().entrySet()){
-                fileWriter.write(currentIndent + indentUnit + indentUnit + "<xs:attribute name=\"" + attribute.getKey() + "\" type=\"xs:string\"/>\n");
+                writer.write(indent + "<xs:attribute name=\"" + attribute.getKey() + typeString + XmlTypes.detectType(attribute.getValue()) + "\"" + " use=\"required" + endingTagString);
             }
         }
-
-        fileWriter.write(currentIndent + indentUnit + "</xs:complexType>\n");
-        fileWriter.write(currentIndent + "</xs:element>\n");
+        indent.delete(indent.length() - 2, indent.length());
+        writer.write(indent + "</xs:complexType>\n");
+        indent.delete(indent.length() - 2, indent.length());
+        writer.write(indent + "</xs:element>\n");
     }
 }
 
