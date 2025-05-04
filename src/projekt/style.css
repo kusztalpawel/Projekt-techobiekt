@@ -1,0 +1,4 @@
+.text-area:disabled {
+    -fx-opacity: 1;
+    -fx-text-fill: black;
+}

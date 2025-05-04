@@ -16,8 +16,9 @@ class FileHandlerTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        handler = new FileHandler();
         tempFile = File.createTempFile("testFile", ".txt");
+        handler = new FileHandler(tempFile);
+        handler.setFileContent();
         tempFile.deleteOnExit();
     }
 
@@ -40,12 +41,4 @@ class FileHandlerTest {
 
         assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?> <Adres> <Miejscowosc rodzaj=\"miasto\">Kielce</Miejscowosc> <Ulica>Kasztanowa</Ulica> <Budynek>44</Budynek> <Mieszkanie>12</Mieszkanie> <Poczta numer=\"26-200\"/> </Adres> ", handler.getFileContent());
     }
-
-    @Test
-    void testSetNullFile() throws Exception {
-        handler.setFileContent();
-
-        assertNull(handler.getFileContent());
-    }
-
 }

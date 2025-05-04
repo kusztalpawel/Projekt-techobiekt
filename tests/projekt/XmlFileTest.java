@@ -19,7 +19,7 @@ class XmlFileTest {
     void setUp() throws IOException {
         File tempFile = File.createTempFile("testFile", ".txt");
         tempFile.deleteOnExit();
-        FileHandler handler = new FileHandler();
+        FileHandler handler = new FileHandler(tempFile);
         String content = "<Element rodzaj=\"miasto\">";
         Files.write(tempFile.toPath(), content.getBytes());
 

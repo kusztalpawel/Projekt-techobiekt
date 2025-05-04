@@ -2,47 +2,21 @@ package projekt;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class FileHandler {
     private File file;
     private String fileContent;
 
-    public boolean openFile() throws FileNotFoundException {
-        String filePath;
-        System.out.println("Podaj ścieżkę do pliku: ");
-        Scanner keyboardInput = new Scanner(System.in);
-        filePath = keyboardInput.nextLine();
-
-        if (filePath == null || filePath.isEmpty()) {
-            System.out.println("Ścieżka jest pusta");
-            return false;
-        }
-
-        try {
-            Path path = Paths.get(filePath);
-
-            if (Files.exists(path)) {
-                file = new File(filePath);
-                setFileContent();
-                return true;
-            } else {
-                System.out.println("Podany plik nie istnieje!");
-                return false;
-            }
-        } catch (InvalidPathException e){
-            System.out.println("Niepoprawna sciezka");
-            return false;
-        }
+    public FileHandler(File file){
+        this.file = file;
     }
 
-    public void setFileContent() throws FileNotFoundException {
+    public boolean setFileContent() throws FileNotFoundException {
         if(file == null){
             System.out.println("Nie otworzono żadnego pliku!");
+
+            return false;
         } else {
             fileContent = "";
             StringBuilder stringBuilder = new StringBuilder(fileContent);
@@ -60,6 +34,8 @@ public class FileHandler {
             System.out.print("\n");
 
             fileReader.close();
+
+            return true;
         }
     }
 
@@ -71,12 +47,11 @@ public class FileHandler {
         return file;
     }
 
-    public String getFileContent(){
-        return fileContent;
+    public String getFileName(){
+        return file.getName();
     }
 
-    public void printFileContent(){
-        System.out.println(fileContent.length());
-        System.out.println(fileContent);
+    public String getFileContent(){
+        return fileContent;
     }
 }
