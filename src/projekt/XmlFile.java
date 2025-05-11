@@ -11,8 +11,8 @@ public class XmlFile {
     private final String fileContent;
     private Element rootElement;
 
-    public XmlFile(FileHandler fileHandler){
-        fileContent = fileHandler.getFileContent();
+    public XmlFile(String fileContent){
+        this.fileContent = fileContent;
     }
 
     public void insertAttributes(Map<String, String> attributes, String attributeString){

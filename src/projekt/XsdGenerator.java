@@ -2,12 +2,12 @@ package projekt;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Map;
+import java.util.*;
 
 public class XsdGenerator {
     String indentUnit = "  ";
 
-    public void createXSD(Element element, Writer writer) throws IOException {
+    public void createXsd(Element element, Writer writer) throws IOException {
         writer.write("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
         writer.write("<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">\n");
         xsdElementGenerator(element, writer, new StringBuilder());

@@ -32,6 +32,30 @@ public class FXMLController {
     @FXML
     private TextArea textArea;
 
+    private String prepareFileContentToShow(List<String> files, String file){
+        String preparedContent = filesList.get(files.indexOf(file)).getFileContent();
+        StringBuilder result = new StringBuilder();
+        boolean insideBrackets = false;
+
+        for (int i = 0; i < preparedContent.length(); i++) {
+            char c = preparedContent.charAt(i);
+
+            if (c == '<') {
+                insideBrackets = true;
+                result.append(c);
+            } else if (c == '>') {
+                insideBrackets = false;
+                result.append(c);
+            } else if (c == ' ' && !insideBrackets) {
+                result.append('\n');
+            } else {
+                result.append(c);
+            }
+        }
+
+        return result.toString();
+    }
+
     private void fileChoosing(int showOrGenerate) {
         List<String> files = new ArrayList<>();
         if(!filesList.isEmpty()){
@@ -44,7 +68,7 @@ public class FXMLController {
 
             Optional<String> result = dialog.showAndWait();
             if(showOrGenerate == 0){
-                result.ifPresent(file -> textArea.setText(filesList.get(files.indexOf(file)).getFileContent()));
+                result.ifPresent(file -> textArea.setText(prepareFileContentToShow(files, file)));
             } else if(showOrGenerate == 1){
                 result.ifPresent(file -> userInput.generateSchema(files.indexOf(file)));
             }

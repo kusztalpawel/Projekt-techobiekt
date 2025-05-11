@@ -26,7 +26,7 @@ class XmlFileTest {
         handler.setFile(tempFile);
         handler.setFileContent();
 
-        xmlFile = new XmlFile(handler);
+        xmlFile = new XmlFile(handler.getFileContent());
     }
 
     @Test

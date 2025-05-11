@@ -29,7 +29,7 @@ class XsdGeneratorTest {
 
         OutputStreamWriter writer = new OutputStreamWriter(outputStream);
 
-        xsdGenerator.createXSD(element, writer);
+        xsdGenerator.createXsd(element, writer);
         writer.flush();
 
         String expectedOutput = """
@@ -50,7 +50,7 @@ class XsdGeneratorTest {
 
         element.setChildren(children);
         OutputStreamWriter writer = new OutputStreamWriter(outputStream);
-        xsdGenerator.createXSD(element, writer);
+        xsdGenerator.createXsd(element, writer);
         writer.flush();
 
         String expectedOutput = """
@@ -77,7 +77,7 @@ class XsdGeneratorTest {
 
         OutputStreamWriter writer = new OutputStreamWriter(outputStream);
 
-        xsdGenerator.createXSD(element, writer);
+        xsdGenerator.createXsd(element, writer);
         writer.flush();
 
         String expectedOutput = """

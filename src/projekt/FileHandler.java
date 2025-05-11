@@ -7,6 +7,7 @@ import java.util.Scanner;
 public class FileHandler {
     private File file;
     private String fileContent;
+    private XmlFile xmlFile;
 
     public FileHandler(File file){
         this.file = file;
@@ -53,5 +54,13 @@ public class FileHandler {
 
     public String getFileContent(){
         return fileContent;
+    }
+
+    public void setXmlFile(){
+        this.xmlFile = new XmlFile(fileContent);
+    }
+
+    public XmlFile getXmlFile(){
+        return xmlFile;
     }
 }
