@@ -1,5 +1,6 @@
 package projekt;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,10 +9,23 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class XmlFile {
-    private final String fileContent;
-    private Element rootElement;
+    private final File file;
+    private String fileContent;
+    private XmlElement rootElement;
 
-    public XmlFile(String fileContent){
+    public XmlFile(File file){
+        this.file = file;
+    }
+
+    public File getFile(){
+        return file;
+    }
+
+    public String getFileContent(){
+        return fileContent;
+    }
+
+    public void setFileContent(String fileContent){
         this.fileContent = fileContent;
     }
 
@@ -34,7 +48,7 @@ public class XmlFile {
         }
     }
 
-    public void insertElement(List<Element> stack,  boolean isRoot, int iterator){
+    public void insertElement(List<XmlElement> stack, boolean isRoot, int iterator){
         boolean isSelfClosing = false;
         int tagNameEnd = fileContent.indexOf('>', iterator);
         Map<String, String> attributes = new HashMap<>();
@@ -56,23 +70,23 @@ public class XmlFile {
             insertAttributes(attributes, attributesPart);
         }
 
-        Element element = new Element(tagName, stack.size());
+        XmlElement xmlElement = new XmlElement(tagName, stack.size());
 
         if(!attributes.isEmpty()){
-            element.setAttributes(attributes);
+            xmlElement.setAttributes(attributes);
         }
 
         if(!isRoot){
-            stack.getLast().addChild(element);
+            stack.getLast().addChild(xmlElement);
         } else {
-            rootElement = element;
+            rootElement = xmlElement;
         }
         if(!isSelfClosing){
-            stack.add(element);
+            stack.add(xmlElement);
         }
     }
 
-    public void insertContent(int iterator, List<Element> stack){
+    private void insertContent(int iterator, List<XmlElement> stack){
         String content;
         int nextTagBeginning = fileContent.indexOf('<', iterator);
         if(nextTagBeginning >= 0){
@@ -94,8 +108,8 @@ public class XmlFile {
                 && (fileContent.charAt(iterator) == '/');
     }
 
-    public int createXml(){
-        List<Element> stack = new ArrayList<>();
+    public void createXmlObject(){
+        List<XmlElement> stack = new ArrayList<>();
         int i = 0;
         int fileLength = fileContent.length();
         while(i >= 0 && i < fileLength){
@@ -119,10 +133,9 @@ public class XmlFile {
             i++;
         }
         System.out.println(rootElement.toString());
-        return 0;
     }
 
-    public Element getRootElement(){
+    public XmlElement getRootElement(){
         return rootElement;
     }
 }

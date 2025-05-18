@@ -5,27 +5,22 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class FileHandler {
-    private File file;
-    private String fileContent;
-    private XmlFile xmlFile;
-
-    public FileHandler(File file){
-        this.file = file;
+    private FileHandler(){
     }
 
-    public boolean setFileContent() throws FileNotFoundException {
-        if(file == null){
+    public static String setFileContent(File file) throws FileNotFoundException {
+        if (file == null) {
             System.out.println("Nie otworzono żadnego pliku!");
 
-            return false;
+            return null;
         } else {
-            fileContent = "";
+            String fileContent = "";
             StringBuilder stringBuilder = new StringBuilder(fileContent);
             Scanner fileReader = new Scanner(file);
             String temporary;
-            while(fileReader.hasNextLine()) {
+            while (fileReader.hasNextLine()) {
                 temporary = fileReader.nextLine().trim();
-                if(!temporary.isEmpty()){
+                if (!temporary.isEmpty()) {
                     stringBuilder.append(temporary);
                     stringBuilder.append(" ");
                 }
@@ -36,31 +31,7 @@ public class FileHandler {
 
             fileReader.close();
 
-            return true;
+            return fileContent;
         }
-    }
-
-    public void setFile(File file){
-        this.file = file;
-    }
-
-    public File getFile(){
-        return file;
-    }
-
-    public String getFileName(){
-        return file.getName();
-    }
-
-    public String getFileContent(){
-        return fileContent;
-    }
-
-    public void setXmlFile(){
-        this.xmlFile = new XmlFile(fileContent);
-    }
-
-    public XmlFile getXmlFile(){
-        return xmlFile;
     }
 }

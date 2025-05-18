@@ -5,14 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Element {
+public class XmlElement {
     private final String tag;
     private String content;
     private final Map<String, String> attributes;
-    private final List<Element> children;
+    private final List<XmlElement> children;
     private final int nodeDepth;
 
-    public Element(String tag, int nodeDepth){
+    public XmlElement(String tag, int nodeDepth){
         this.tag = tag;
         this.nodeDepth = nodeDepth;
         attributes = new HashMap<>();
@@ -31,23 +31,23 @@ public class Element {
         return attributes;
     }
 
-    public void addAttribute(String name, String type){
-        attributes.put(name, type);
+    public void addAttribute(String name, String value){
+        attributes.put(name, value);
     }
 
     public void setAttributes(Map <String, String> attributes){
         this.attributes.putAll(attributes);
     }
 
-    public List<Element> getChildren(){
+    public List<XmlElement> getChildren(){
         return children;
     }
 
-    public void addChild(Element child){
+    public void addChild(XmlElement child){
         children.add(child);
     }
 
-    public void setChildren(List<Element> children){
+    public void setChildren(List<XmlElement> children){
         this.children.addAll(children);
     }
 
@@ -66,7 +66,7 @@ public class Element {
         stringBuilder.repeat("  ", this.nodeDepth);
         stringBuilder.append(tag).append(" : atrybuty: ").append(attributes).append(" : zawartosc: ").append(content).append("\n");
         if(!children.isEmpty()){
-            for(Element child : children){
+            for(XmlElement child : children){
                 stringBuilder.append(child.toString());
             }
         }

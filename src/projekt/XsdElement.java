@@ -24,6 +24,10 @@ public class XsdElement {
         return name;
     }
 
+    public String getType(){
+        return type;
+    }
+
     public Map<String, String> getAttributes(){
         return attributes;
     }
@@ -62,14 +66,14 @@ public class XsdElement {
         return xsdAttributes;
     }
 
-    private XsdElement insertXsdElement(Element element){
-        return new XsdElement(element.getTag(), XmlTypes.detectType(element.getContent()), element.getNodeDepth());
+    private XsdElement insertXsdElement(XmlElement xmlElement){
+        return new XsdElement(xmlElement.getTag(), XmlTypes.detectType(xmlElement.getContent()), xmlElement.getNodeDepth());
     }
 
-    public void createXsdObject(Element element){
-        this.setAttributes(setXsdAttributes(element.getAttributes()));
-        if(!element.getChildren().isEmpty()){
-            for(Element child : element.getChildren()){
+    public void createXsdObject(XmlElement xmlElement){
+        this.setAttributes(setXsdAttributes(xmlElement.getAttributes()));
+        if(!xmlElement.getChildren().isEmpty()){
+            for(XmlElement child : xmlElement.getChildren()){
                 XsdElement xsdChild = insertXsdElement(child);
                 xsdChild.createXsdObject(child);
                 this.addChild(xsdChild);

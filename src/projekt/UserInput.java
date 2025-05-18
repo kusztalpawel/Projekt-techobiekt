@@ -8,49 +8,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserInput {
-    private final List<FileHandler> filesList;
+    private final List<XmlFile> xmlFilesList;
+    private final List<XsdFile> xsdFilesList;
 
-    public UserInput(List<FileHandler> filesList){
-        this.filesList = filesList;
+    public UserInput(List<XmlFile> xmlFileList, List<XsdFile> xsdFileList){
+        this.xmlFilesList = xmlFileList;
+        this.xsdFilesList = xsdFileList;
     }
 
     public void addFile(File file) throws FileNotFoundException {
-        filesList.add(new FileHandler(file));
-        if(!(filesList.getLast().setFileContent())) {
-            filesList.removeLast();
-        }
+        xmlFilesList.add(new XmlFile(file));
+        xmlFilesList.getLast().setFileContent(FileHandler.setFileContent(file));
+        xmlFilesList.getLast().createXmlObject();
     }
 
     public List<String> showFilesList(){
         ArrayList<String> files = new ArrayList<>();
-        for (FileHandler fileHandler : filesList) {
-            files.add(fileHandler.getFileName());
+        for (XmlFile fileHandler : xmlFilesList) {
+            files.add(fileHandler.getFile().getName());
         }
 
         return files;
     }
 
-    private XsdElement createXsdRoot(FileHandler xmlFile){
-        return new XsdElement(xmlFile.getXmlFile().getRootElement().getTag(), XmlTypes.detectType(xmlFile.getXmlFile().getRootElement().getTag()),0);
+    private XsdElement createXsdRoot(XmlFile xmlFile){
+        return new XsdElement(xmlFile.getRootElement().getTag(), XmlTypes.detectType(xmlFile.getRootElement().getTag()),0);
     }
 
     public void generateSchema(int fileIndex){
-        FileHandler xmlFile = filesList.get(fileIndex);
+        XmlFile xmlFile = xmlFilesList.get(fileIndex);
 
-        xmlFile.setXmlFile();
-        if(xmlFile.getXmlFile().createXml() == -1){
-            return;
-        }
+        xsdFilesList.add(new XsdFile());
+        xsdFilesList.getLast().setRootElement(createXsdRoot(xmlFile));
+        xsdFilesList.getLast().getRootElement().createXsdObject(xmlFile.getRootElement());
 
-        XsdElement xsdRootElement = createXsdRoot(xmlFile);
-        xsdRootElement.createXsdObject(xmlFile.getXmlFile().getRootElement());
+        System.out.println(xsdFilesList.getLast().getRootElement());
 
-        System.out.println(xsdRootElement);
-
-        String fileName = xmlFile.getFileName().substring(0, xmlFile.getFileName().indexOf("."));
+        String fileName = xmlFile.getFile().getName().substring(0, xmlFile.getFile().getName().indexOf("."));
 
         try(FileWriter fileWriter = new FileWriter(fileName + "_schema.xsd")) {
-            new XsdGenerator().createXsd(xmlFile.getXmlFile().getRootElement(), fileWriter);
+            new XsdGenerator().createXsd(xmlFile.getRootElement(), fileWriter);
         } catch (IOException e) {
             System.out.println("An error occurred");
         }

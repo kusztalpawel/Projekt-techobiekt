@@ -19,14 +19,11 @@ class XmlFileTest {
     void setUp() throws IOException {
         File tempFile = File.createTempFile("testFile", ".txt");
         tempFile.deleteOnExit();
-        FileHandler handler = new FileHandler(tempFile);
+        xmlFile = new XmlFile(tempFile);
         String content = "<Element rodzaj=\"miasto\">";
         Files.write(tempFile.toPath(), content.getBytes());
 
-        handler.setFile(tempFile);
-        handler.setFileContent();
-
-        xmlFile = new XmlFile(handler.getFileContent());
+        xmlFile.setFileContent(FileHandler.setFileContent(tempFile));
     }
 
     @Test
@@ -77,11 +74,11 @@ class XmlFileTest {
 
     @Test
     void testInsertRootElement() {
-        List<Element> stack = new ArrayList<>();
+        List<XmlElement> stack = new ArrayList<>();
 
         xmlFile.insertElement(stack, true, 0);
 
-        Element root = xmlFile.getRootElement();
+        XmlElement root = xmlFile.getRootElement();
         assertNotNull(root);
         assertEquals("Element", root.getTag());
         assertEquals("miasto", root.getAttributes().get("rodzaj"));
@@ -90,15 +87,15 @@ class XmlFileTest {
 
     @Test
     void testInsertSelfClosingChild() {
-        List<Element> stack = new ArrayList<>();
-        Element parent = new Element("root", 0);
+        List<XmlElement> stack = new ArrayList<>();
+        XmlElement parent = new XmlElement("root", 0);
         stack.add(parent);
 
         xmlFile.insertElement(stack, false, 0);
 
-        List<Element> children = parent.getChildren();
+        List<XmlElement> children = parent.getChildren();
         assertEquals(1, children.size());
-        Element child = children.getFirst();
+        XmlElement child = children.getFirst();
         assertEquals("Element", child.getTag());
         assertEquals("miasto", child.getAttributes().get("rodzaj"));
         assertTrue(stack.contains(child));

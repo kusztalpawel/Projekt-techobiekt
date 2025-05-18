@@ -16,8 +16,10 @@ import java.util.List;
 import java.util.Optional;
 
 public class FXMLController {
-    List<FileHandler> filesList = new ArrayList<>();
-    UserInput userInput = new UserInput(filesList);
+    private final List<XmlFile> xmlFilesList = new ArrayList<>();
+    private final List<XsdFile> xsdFilesList = new ArrayList<>();
+    private final UserInput userInput = new UserInput(xmlFilesList, xsdFilesList);
+    private int fileIndex;
 
     @FXML
     private Button button1;
@@ -32,13 +34,12 @@ public class FXMLController {
     @FXML
     private TextArea textArea;
 
-    private String prepareFileContentToShow(List<String> files, String file){
-        String preparedContent = filesList.get(files.indexOf(file)).getFileContent();
+    private String prepareFileContentToShow(String fileContent){
         StringBuilder result = new StringBuilder();
         boolean insideBrackets = false;
 
-        for (int i = 0; i < preparedContent.length(); i++) {
-            char c = preparedContent.charAt(i);
+        for (int i = 0; i < fileContent.length(); i++) {
+            char c = fileContent.charAt(i);
 
             if (c == '<') {
                 insideBrackets = true;
@@ -56,24 +57,24 @@ public class FXMLController {
         return result.toString();
     }
 
-    private void fileChoosing(int showOrGenerate) {
+    private boolean fileChoosing() {
         List<String> files = new ArrayList<>();
-        if(!filesList.isEmpty()){
-            for(FileHandler file : filesList){
-                files.add(file.getFileName());
+        if(!xmlFilesList.isEmpty()){
+            for(XmlFile file : xmlFilesList){
+                files.add(file.getFile().getName());
             }
             ChoiceDialog<String> dialog = new ChoiceDialog<>(files.getFirst(), files);
             dialog.setTitle("Choose File");
             dialog.setContentText("Files:");
 
             Optional<String> result = dialog.showAndWait();
-            if(showOrGenerate == 0){
-                result.ifPresent(file -> textArea.setText(prepareFileContentToShow(files, file)));
-            } else if(showOrGenerate == 1){
-                result.ifPresent(file -> userInput.generateSchema(files.indexOf(file)));
-            }
+            result.ifPresent(file -> fileIndex = files.indexOf(file));
+
+            return true;
         } else {
             System.out.println("No files!");
+
+            return false;
         }
     }
 
@@ -100,12 +101,23 @@ public class FXMLController {
 
     @FXML
     void showFile() {
-        fileChoosing(0);
+        if(fileChoosing()){
+            textArea.setText(prepareFileContentToShow(xmlFilesList.get(fileIndex).getFileContent()));
+        }
     }
 
     @FXML
     void generateSchema() {
-        fileChoosing(1);
+        if(fileChoosing()){
+            userInput.generateSchema(fileIndex);
+        }
+    }
+
+    @FXML
+    void validateFile(ActionEvent event) {
+        if(fileChoosing()){
+            System.out.println(Validation.validateXml(xmlFilesList.get(fileIndex).getRootElement(), xsdFilesList.get(fileIndex).getRootElement()));
+        }
     }
 
     @FXML
