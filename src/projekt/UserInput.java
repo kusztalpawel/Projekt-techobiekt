@@ -40,7 +40,7 @@ public class UserInput {
 
         xsdFilesList.add(new XsdFile());
         xsdFilesList.getLast().setRootElement(createXsdRoot(xmlFile));
-        xsdFilesList.getLast().getRootElement().createXsdObject(xmlFile.getRootElement());
+        xsdFilesList.getLast().getRootElement().insertXsdElement(xmlFile.getRootElement());
 
         System.out.println(xsdFilesList.getLast().getRootElement());
 

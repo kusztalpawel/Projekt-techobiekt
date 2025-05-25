@@ -7,7 +7,7 @@ public class Validation {
     }
 
     public static boolean validateXml(XmlElement xmlElement, XsdElement xsdElement){
-        if(!xmlElement.getTag().equals(xsdElement.getName())){
+        /*if(!xmlElement.getTag().equals(xsdElement.getName())){
             return false;
         }
 
@@ -39,12 +39,12 @@ public class Validation {
             return false;
         }
 
-        for(XsdElement child : xsdElement.getChildren()){
+        for(XsdElement child : xsdElement.getChildren().keySet()){
             int childIndex = xsdElement.getChildren().indexOf(child);
 
             validateXml(xmlElement.getChildren().get(childIndex), child);
         }
-
+*/
         return true;
     }
 }

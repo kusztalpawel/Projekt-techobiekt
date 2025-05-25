@@ -116,7 +116,7 @@ public class FXMLController {
     @FXML
     void validateFile(ActionEvent event) {
         if(fileChoosing()){
-            System.out.println(Validation.validateXml(xmlFilesList.get(fileIndex).getRootElement(), xsdFilesList.get(fileIndex).getRootElement()));
+            System.out.println(Validation.validateXml(xmlFilesList.get(fileIndex).getRootElement(), xsdFilesList.getLast().getRootElement()));
         }
     }
 

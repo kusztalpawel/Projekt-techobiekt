@@ -5,10 +5,12 @@ public class XmlTypes {
         STRING("xs:string"),
         BOOLEAN("xs:boolean"),
         DECIMAL("xs:decimal"),
+        INTEGER("xs:integer"),
         DURATION("xs:duration"),
         DATETIME("xs:dateTime"),
         TIME("xs:time"),
-        DATE("xs:date");
+        DATE("xs:date"),
+        ANY("xs:anyType");
 
         public final String label;
 
@@ -26,6 +28,9 @@ public class XmlTypes {
         }
         if(value.matches("^-?\\d+(\\.\\d+)?$")){
             return XmlSimpleType.DECIMAL.label;
+        }
+        if (value.matches("^-?\\d+$")) {
+            return XmlSimpleType.INTEGER.label;
         }
         if(value.matches("^P(?:(\\d+)Y)?(?:(\\d+)M)?(?:(\\d+)D)?T?(?:(\\d+)H)?(?:(\\d+)M)?(?:(\\d+)S)?$")){
             return XmlSimpleType.DURATION.label;
