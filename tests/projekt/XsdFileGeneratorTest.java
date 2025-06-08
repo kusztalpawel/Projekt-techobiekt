@@ -8,14 +8,14 @@ import java.io.OutputStreamWriter;
 import java.io.IOException;
 import java.util.*;
 
-class XsdGeneratorTest {
+class XsdFileGeneratorTest {
 
-    private XsdGenerator xsdGenerator;
+    private XsdFileGenerator xsdFileGenerator;
     private ByteArrayOutputStream outputStream;
 
     @BeforeEach
     void setUp() {
-        xsdGenerator = new XsdGenerator();
+        xsdFileGenerator = new XsdFileGenerator();
         outputStream = new ByteArrayOutputStream();
     }
 
@@ -25,11 +25,11 @@ class XsdGeneratorTest {
 
     @Test
     void testEmptyElement() throws IOException {
-        XmlElement xmlElement = new XmlElement("testElement", 0);
+        XmlElement xmlElement = new XmlElement("testElement", 0, null);
 
         OutputStreamWriter writer = new OutputStreamWriter(outputStream);
 
-        xsdGenerator.createXsd(xmlElement, writer);
+        xsdFileGenerator.createXsd(xmlElement, writer);
         writer.flush();
 
         String expectedOutput = """
@@ -44,13 +44,14 @@ class XsdGeneratorTest {
 
     @Test
     void testWithChildren() throws IOException {
-        XmlElement child = new XmlElement("childElement", 1);
+        XmlElement xmlElement = new XmlElement("parentElement", 0, null);
+
+        XmlElement child = new XmlElement("childElement", 1, xmlElement);
         List<XmlElement> children = List.of(child);
-        XmlElement xmlElement = new XmlElement("parentElement", 0);
 
         xmlElement.setChildren(children);
         OutputStreamWriter writer = new OutputStreamWriter(outputStream);
-        xsdGenerator.createXsd(xmlElement, writer);
+        xsdFileGenerator.createXsd(xmlElement, writer);
         writer.flush();
 
         String expectedOutput = """
@@ -71,13 +72,13 @@ class XsdGeneratorTest {
 
     @Test
     void testWithAttributes() throws IOException {
-        XmlElement xmlElement = new XmlElement("testElement", 0);
+        XmlElement xmlElement = new XmlElement("testElement", 0, null);
         xmlElement.setAttributes(new HashMap<>());
         xmlElement.addAttribute("attr1", "value1");
 
         OutputStreamWriter writer = new OutputStreamWriter(outputStream);
 
-        xsdGenerator.createXsd(xmlElement, writer);
+        xsdFileGenerator.createXsd(xmlElement, writer);
         writer.flush();
 
         String expectedOutput = """

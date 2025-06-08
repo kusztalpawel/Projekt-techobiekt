@@ -1,10 +1,7 @@
 package projekt;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,8 +39,13 @@ public class XmlFile {
             }
 
             if(attributesArray[0] != null && attributesArray[1] != null){
-                attributes.put(attributesArray[0],attributesArray[1]);
-                System.out.println(attributesArray[0] + " " + attributesArray[1]);
+                if(attributes.get(attributesArray[0]) == null){
+                    attributes.put(attributesArray[0],attributesArray[1]);
+                    attributesArray[0] = null;
+                    attributesArray[1] = null;
+                } else {
+                    ParsingErrorHandler.error();
+                }
             }
         }
     }
@@ -51,7 +53,7 @@ public class XmlFile {
     public void insertElement(List<XmlElement> stack, boolean isRoot, int iterator){
         boolean isSelfClosing = false;
         int tagNameEnd = fileContent.indexOf('>', iterator);
-        Map<String, String> attributes = new HashMap<>();
+        Map<String, String> attributes = new LinkedHashMap<>();
         String tagString = fileContent.substring(iterator + 1, tagNameEnd);
         String tagName;
 
@@ -70,7 +72,7 @@ public class XmlFile {
             insertAttributes(attributes, attributesPart);
         }
 
-        XmlElement xmlElement = new XmlElement(tagName, stack.size());
+        XmlElement xmlElement = new XmlElement(tagName, stack.size(), !stack.isEmpty() ? stack.getLast() : null);
 
         if(!attributes.isEmpty()){
             xmlElement.setAttributes(attributes);

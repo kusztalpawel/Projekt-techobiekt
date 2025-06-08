@@ -31,23 +31,21 @@ public class UserInput {
         return files;
     }
 
-    private XsdElement createXsdRoot(XmlFile xmlFile){
-        return new XsdElement(xmlFile.getRootElement().getTag(), XmlTypes.detectType(xmlFile.getRootElement().getTag()),0);
-    }
-
     public void generateSchema(int fileIndex){
         XmlFile xmlFile = xmlFilesList.get(fileIndex);
 
         xsdFilesList.add(new XsdFile());
-        xsdFilesList.getLast().setRootElement(createXsdRoot(xmlFile));
-        xsdFilesList.getLast().getRootElement().insertXsdElement(xmlFile.getRootElement());
+        xsdFilesList.getLast().setRootElement(XsdElement.createXsdElement(xmlFile));
+        xsdFilesList.getLast().getRootElement().createXsdTree(xmlFile.getRootElement());
+
+        XsdFile xsdFile = xsdFilesList.get(fileIndex);
 
         System.out.println(xsdFilesList.getLast().getRootElement());
 
         String fileName = xmlFile.getFile().getName().substring(0, xmlFile.getFile().getName().indexOf("."));
 
         try(FileWriter fileWriter = new FileWriter(fileName + "_schema.xsd")) {
-            new XsdGenerator().createXsd(xmlFile.getRootElement(), fileWriter);
+            new XsdFileGenerator().createXsd(xsdFile.getRootElement(), fileWriter);
         } catch (IOException e) {
             System.out.println("An error occurred");
         }

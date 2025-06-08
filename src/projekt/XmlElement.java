@@ -1,9 +1,6 @@
 package projekt;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class XmlElement {
     private final String tag;
@@ -11,12 +8,14 @@ public class XmlElement {
     private final Map<String, String> attributes;
     private final List<XmlElement> children;
     private final int nodeDepth;
+    private final XmlElement parent;
 
-    public XmlElement(String tag, int nodeDepth){
+    public XmlElement(String tag, int nodeDepth, XmlElement parent){
         this.tag = tag;
         this.nodeDepth = nodeDepth;
-        attributes = new HashMap<>();
+        attributes = new LinkedHashMap<>();
         children = new ArrayList<>();
+        this.parent = parent;
     }
 
     public String getTag(){
@@ -59,12 +58,38 @@ public class XmlElement {
         return nodeDepth;
     }
 
+    public XmlElement getParent() {
+        return parent;
+    }
+
+    public List<XmlElement> getSameDepthNodes() {
+        XmlElement root = this;
+        while (root.parent != null) {
+            root = root.parent;
+        }
+
+        List<XmlElement> listElements = new ArrayList<>();
+        nodesSearch(root, this.nodeDepth, listElements);
+
+        return listElements;
+    }
+
+    private void nodesSearch(XmlElement node, int targetDepth, List<XmlElement> result) {
+        if (node.nodeDepth == targetDepth) {
+            result.add(node);
+            return;
+        }
+        for (XmlElement child : node.getChildren()) {
+            nodesSearch(child, targetDepth, result);
+        }
+    }
+
     @Override
     public String toString() {
         String elementsTree = "";
         StringBuilder stringBuilder = new StringBuilder(elementsTree);
         stringBuilder.repeat("  ", this.nodeDepth);
-        stringBuilder.append(tag).append(" : atrybuty: ").append(attributes).append(" : zawartosc: ").append(content).append("\n");
+        stringBuilder.append(tag).append(": atrybuty: ").append(attributes).append(" | zawartosc: ").append(content).append("\n");
         if(!children.isEmpty()){
             for(XmlElement child : children){
                 stringBuilder.append(child.toString());

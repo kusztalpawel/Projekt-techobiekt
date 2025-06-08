@@ -88,7 +88,7 @@ class XmlFileTest {
     @Test
     void testInsertSelfClosingChild() {
         List<XmlElement> stack = new ArrayList<>();
-        XmlElement parent = new XmlElement("root", 0);
+        XmlElement parent = new XmlElement("root", 0, null);
         stack.add(parent);
 
         xmlFile.insertElement(stack, false, 0);
