@@ -116,7 +116,14 @@ public class FXMLController {
     @FXML
     void validateFile(ActionEvent event) {
         if(fileChoosing()){
-            System.out.println(Validation.validateXml(xmlFilesList.get(fileIndex).getRootElement(), xsdFilesList.getLast().getRootElement()));
+            Validator validator = new Validator();
+            List<String> errors = validator.validate(xmlFilesList.get(fileIndex).getRootElement(), xsdFilesList.getLast().getRootElement());
+
+            if (errors.isEmpty()) {
+                System.out.println("XML is valid.");
+            } else {
+                errors.forEach(System.out::println);
+            }
         }
     }
 

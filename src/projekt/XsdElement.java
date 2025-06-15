@@ -7,7 +7,7 @@ import java.util.*;
 public class XsdElement {
     private final String name;
     private String type;
-    private Map<Pair<String, String>, String> attributes;
+    private final Map<Pair<String, String>, String> attributes;
     private int minOccur;
     private String maxOccur;
     private final List<XsdElement> children;

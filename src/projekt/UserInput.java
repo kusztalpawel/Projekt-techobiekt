@@ -34,11 +34,11 @@ public class UserInput {
     public void generateSchema(int fileIndex){
         XmlFile xmlFile = xmlFilesList.get(fileIndex);
 
-        xsdFilesList.add(new XsdFile());
-        xsdFilesList.getLast().setRootElement(XsdElement.createXsdElement(xmlFile));
-        xsdFilesList.getLast().getRootElement().createXsdTree(xmlFile.getRootElement());
+        XsdFile xsdFile = new XsdFile();
+        xsdFile.setRootElement(XsdElement.createXsdElement(xmlFile));
+        xsdFile.getRootElement().createXsdTree(xmlFile.getRootElement());
 
-        XsdFile xsdFile = xsdFilesList.get(fileIndex);
+        xsdFilesList.add(xsdFile);
 
         System.out.println(xsdFilesList.getLast().getRootElement());
 
